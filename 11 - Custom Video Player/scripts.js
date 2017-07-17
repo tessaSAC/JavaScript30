@@ -58,12 +58,12 @@ function handleProgress() {
 }
 
 function scrub(e) {
-  // Add support for click & drag:
-  if (e.type === 'click' || e.type === 'mousemove' && leftClicking) {
-    console.log(e);
-    console.log(leftClicking);
-    video.currentTime = (e.offsetX / progress.offsetWidth) * video.duration;
-  }
+  // // Add support for click & drag:
+  // if (e.type === 'click' || e.type === 'mousemove' && leftClicking) {
+    // console.log(e);
+    // console.log(leftClicking);
+  video.currentTime = (e.offsetX / progress.offsetWidth) * video.duration;
+  // }
 }
 
 
@@ -77,7 +77,8 @@ video.addEventListener('pause', updateButton);
 video.addEventListener('timeupdate', handleProgress);
 
 progress.addEventListener('click', scrub);
-progress.addEventListener('mousemove', scrub);
+// progress.addEventListener('mousemove', scrub);
+progress.addEventListener('mousemove', e => leftClicking && scrub(e));
 progress.addEventListener('mousedown', isClicking);
 
 toggle.addEventListener('click', togglePlay);
