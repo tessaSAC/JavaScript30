@@ -5,15 +5,90 @@
   <title>HTML5 Canvas</title>
 </head>
 <body>
-<canvas id="draw" width="800" height="800"></canvas>
-<script>
-</script>
+  <canvas id="draw" width="800" height="800"></canvas>
 
-<style>
-  html, body {
-    margin:0;
-  }
-</style>
+  <script>
+    const canvas = document.querySelector('#draw');
+    const ctx = canvas.getContext('2d'); // What we draw on
+
+    // Resize canvas:
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Drawing style:
+    ctx.strokeStyle = '#BADA55';
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 100;
+
+    // Can use Photoshop blend mode-like options!
+    ctx.globalCompositeOperation = 'multiply';
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // Make colors variable:
+    let hue = 0;
+
+    // Make linewidth infinitely variable:
+    let direction = true;
+
+    function draw(e) {
+      // Will prevent drawing when mouseup
+      if (!isDrawing) return;
+
+      // Set new hue:
+      ctx.strokeStyle = `hsl(${ hue }, 100%, 50%)`;
+      // Set new width:
+      // ctx.lineWidth = hue;
+
+      // Start a line
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      // Connect to mousemoved location
+      ctx.lineTo(e.offsetX, e.offsetY);
+      // Draw the actual line
+      ctx.stroke();
+
+      // Update lastX and lastY
+      // lastX = e.offsetX;
+      // lastY = e.offsetY;
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+
+      // Change hue:
+      ++hue; // it modulo's the value
+
+      // Alternatively, could do:
+      if (hue > 360) hue = 0;
+
+      // Decide whether we should increase or decrease lineWidth
+      if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+        direction = !direction;
+      }
+      // increment lineWidth:
+      direction ? ++ctx.lineWidth : --ctx.lineWidth;
+    }
+
+    canvas.addEventListener('mousemove', draw);
+    // Only let `isDrawing` = true on mousedown in canvas
+    canvas.addEventListener('mousedown', (e) => {
+      isDrawing = true;
+      // Update lastX and lastY BEFORE we start drawing
+      [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+
+    // Listen to if mouse is no longer drawing
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+  </script>
+
+  <style>
+    html, body {
+      margin:0;
+    }
+  </style>
 
 </body>
 </html>
