@@ -113,8 +113,18 @@
           if (checkbox === this || checkbox === lastChecked) inBetween = !inBetween;
 
           // Check boxes in-between:
-          if (inBetween) checkbox.checked = true;
-        })
+          // if (inBetween) checkbox.checked = true;
+
+          // MY VARIATION: Can also shift-uncheck boxes:
+          if (inBetween) {
+            if (!lastChecked.checked) checkbox.checked = false;
+            else checkbox.checked = true;
+          }
+          // Could also toggle instead by doing checkbox.checked = !checkbox.checked?
+        });
+
+        // MY VARIATION; UNCHECK FINAL if necessary:
+        if (!lastChecked.checked) this.checked = false;
       }
 
       // Reassign `lastChecked`
