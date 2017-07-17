@@ -59,6 +59,37 @@
 
 <script>
 
+	// Final step: extrapolate out the function and move the event listener to the bottom
+	// That way if we want to play the sound based off something else we can
+	function playSound(e) {  // When called run a function that gives us `e` -- the event
+
+		console.log(e.keyCode);  // Logs just the `keyCode` property of the `event`
+		const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);  // `[]` = Attribute selector
+		const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);  // Grabs `div` with class of `.key` and correct keyCode
+
+		if (!audio) return;  // Stops function from running if it doesn't have audio assigned
+		audio.currentTime = 0;  // Rewinds current audio if playing -- for repeated keypresses
+		audio.play();
+
+		key.classList.add('playing');  // same as jQuery `key.addClass('playing');`
+		// We also have `.remove` and `.toggle`
+		// key.classList.remove('playing');
+		// key.classList.toggle('playing');
+	}
+
+	function removeTransition(e) {
+		if (e.propertyName !== 'transform') return;  // Don't remove if not a transition!
+		this.classList.remove('playing');  // `this` is key, since that's what `removeTransition` is being 'called against'
+		console.log("I ran!")
+	}
+
+	const keys = document.querySelectorAll('.key');
+	// You can't add a listener to an array (of all keys -- it's actually a nodelist); must add one to each individually:
+	keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+	// creates a listener for `keydown` event;
+	window.addEventListener('keydown', playSound);
+
 </script>
 
 
