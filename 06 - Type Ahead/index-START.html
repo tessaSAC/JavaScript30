@@ -14,8 +14,62 @@
       <li>or a state</li>
     </ul>
   </form>
+
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+  const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+  const cities = [];
+
+  // New browser API that fetches resources and returns a PROMISE
+  fetch(endpoint)
+    // that resolves to a BLOB (bc it doesn't know the data type)
+    .then(blob => blob.json())
+    // The blob's `json` method returns ANOTHER PROMISE:
+    .then(data => cities.push(...data));
+
+  function findMatches(wordToMatch, cities) {
+    return cities.filter(place => {
+      // figure out if the city/state matches the search term
+
+      // Need to REGEXP the VARIABLE
+      const regex = new RegExp(wordToMatch, 'gi');  // pass in var and flags
+      return place.city.match(regex) || place.state.match(regex);
+    })
+  }
+
+  // Add commas:
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  // Create display function:
+  function displayMatches() {
+    const matchArray = findMatches(this.value, cities);
+
+    const html = matchArray.map(place => {
+      const regex = new RegExp(this.value, 'gi');
+      const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`)
+      const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`)
+
+      return `
+        <li>
+          <span className="name">${cityName}, ${stateName}</span>
+          <span className="population">${numberWithCommas(place.population)}</span>
+        </li>
+      `;
+    }).join('');
+    suggestions.innerHTML = html;
+  }
+
+  const searchInput = document.querySelector('.search');
+  const suggestions = document.querySelector('.suggestions');
+
+  // Add an event listener to the search box:
+  // Fires whenever user leaves search box:
+  searchInput.addEventListener('change', displayMatches);
+  // Fires whenever user types something:
+  searchInput.addEventListener('keyup', displayMatches);
 
 </script>
   </body>
