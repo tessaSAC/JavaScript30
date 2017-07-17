@@ -98,7 +98,32 @@
     </div>
   </div>
 
-<script>
-</script>
+  <script>
+
+    const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+    let lastChecked;
+
+    function handleCheck(e) {
+      // Check if SHIFT KEYDOWN and check that they are CHECKING item
+      let inBetween = false;
+      if (e.shiftKey && this.checked) {
+        // Loop over every checkbox:
+        checkboxes.forEach(checkbox => {
+          // Toggle inBetween
+          if (checkbox === this || checkbox === lastChecked) inBetween = !inBetween;
+
+          // Check boxes in-between:
+          if (inBetween) checkbox.checked = true;
+        })
+      }
+
+      // Reassign `lastChecked`
+      lastChecked = this;
+    }
+
+    checkboxes.forEach(checkbox => checkbox.addEventListener('click', handleCheck));  // Will run even on keyboard click
+
+  </script>
+
 </body>
 </html>
