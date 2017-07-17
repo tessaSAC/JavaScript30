@@ -7,6 +7,7 @@ const progressBar = player.querySelector('.progress__filled');
 const toggle = player.querySelector('.toggle');
 const skipButtons = player.querySelectorAll('[data-skip]');
 const ranges = player.querySelectorAll('.player__slider');
+const fullscreen = player.querySelector('.fullscreen');
 
 let leftClicking = false;
 
@@ -66,6 +67,11 @@ function scrub(e) {
   // }
 }
 
+function toggleFullscreen() {
+  console.log('I was clicked!!!');
+  video.webkitRequestFullScreen();  // idk what this is or why `requestFullScreen` doesn't exist
+}
+
 
 
 // Hook up Event Listeners
@@ -88,3 +94,6 @@ skipButtons.forEach(button => button.addEventListener('click', skip));
 ranges.forEach(range => range.addEventListener('change', handleRangeUpdate));
 ranges.forEach(range => range.addEventListener('mousemove', handleRangeUpdate));
 ranges.forEach(range => range.addEventListener('mousedown', isClicking));
+
+// Challenge: Fullscreen
+fullscreen.addEventListener('click', toggleFullscreen);
